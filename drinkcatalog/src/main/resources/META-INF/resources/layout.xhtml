@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Drink Catalog</title>
+</h:head>
+
+<h:body>
+
+    <h:form id="drink-form">
+        <p:autoUpdate />
+        <p:panel header="Drink Catalog">
+            <h:panelGrid columns="2" cellpadding="4">
+                <h:outputText value="Drink Name: "/>
+                <p:inputText id="drink-name" value="#{submitController.drinkName}"/>
+
+                <h:outputText value="Drink Instructions: "/>
+                <p:inputText id="drink-instr" value="#{submitController.drinkInstr}"/>
+
+                <h:outputText value="Drink Type: "/>
+                <p:inputText id="drink-type" value="#{submitController.drinkType}"/>
+
+                <p:commandButton id="submit" value="Submit"
+                                 update="@form"
+                                 action="#{submitController.saveDrink()}"/>
+                <p:commandButton id="loadall" value="Load All"
+                                 update="@form"
+                                 oncomplete="#{submitController.getDrinks()}"/>
+                <p:commandButton id="edit" value="Edit"
+                                 update="@form"
+                                 action="#{submitController.updateDrink()}"/>
+            </h:panelGrid>
+        </p:panel>
+
+        <p:panel header="Drink List">
+        <p:dataTable id="table" var="drink"
+                    value="#{submitController.drinks}">
+        <p:column>
+            <f:facet name="header">Drink Id</f:facet>
+            <h:outputText value="#{drink.id}" />
+        </p:column>
+        <p:column>
+            <f:facet name="header">Name</f:facet>
+            <h:outputText value="#{drink.name}" />
+        </p:column>
+        <p:column>
+            <f:facet name="header">Instructions </f:facet>
+            <h:outputText value="#{drink.instructions}">
+            </h:outputText>
+        </p:column>
+        <p:column>
+            <f:facet name="header">Type </f:facet>
+            <h:outputText value="#{drink.type}">
+            </h:outputText>
+        </p:column>
+
+            <p:column id="action">
+                <f:facet name="header">Action</f:facet>
+                <h:commandLink value="Edit"
+                               action="#{submitController.editDrink(drink)}">
+                    <f:ajax execute="action" render="drink-form" />
+                </h:commandLink> /
+                    <h:commandLink value="Delete"
+                                   action="#{submitController.deleteDrink(drink)}">
+                        <f:ajax execute="action" render="table" />
+                    </h:commandLink>
+            </p:column>
+
+
+        </p:dataTable>
+        </p:panel>
+
+        <p:dialog header="Success" widgetVar="greetingDialog"
+                  modal="true" resizable="false">
+            <h:panelGrid id="greeting-panel" columns="1" cellpadding="4" onclick="#{submitController.getAllDrinks()}">
+                <h:outputText value="#{submitController.msg}"/>
+            </h:panelGrid>
+        </p:dialog>
+    </h:form>
+</h:body>
+
+
+</html>
